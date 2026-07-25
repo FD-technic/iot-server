@@ -1,4 +1,4 @@
-package cz.ferdo.iot_server.command;
+package cz.ferdo.iot_server.commands.command;
 
 import cz.ferdo.iot_server.enums.CommandType;
 

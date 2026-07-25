@@ -1,9 +1,9 @@
-package cz.ferdo.iot_server.dto;
+package cz.ferdo.iot_server.devices.dto;
 
 import cz.ferdo.iot_server.enums.DeviceType;
 import tools.jackson.databind.JsonNode;
 
-public record DeviceMessage(
+public record DeviceMessageDTO(
         String deviceId,
         DeviceType deviceType,
         String firmware,
