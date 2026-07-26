@@ -2,8 +2,9 @@ package cz.ferdo.iot_server.measurement.service;
 
 import cz.ferdo.iot_server.devices.entity.DeviceEntity;
 import cz.ferdo.iot_server.devices.repository.DeviceRepository;
-import cz.ferdo.iot_server.measurement.dto.MeasureSaveDTO;
-import cz.ferdo.iot_server.measurement.dto.MeasurementDTO;
+import cz.ferdo.iot_server.measurement.dto.MeasurementBatchDTO;
+import cz.ferdo.iot_server.measurement.dto.MeasurementSaveDTO;
+import cz.ferdo.iot_server.measurement.entity.MeasurementBatchEntity;
 import cz.ferdo.iot_server.measurement.entity.MeasurementEntity;
 import cz.ferdo.iot_server.measurement.enums.Period;
 import cz.ferdo.iot_server.measurement.mapper.MeasurementMapper;
@@ -30,18 +31,25 @@ public class MeasurementServiceImpl implements MeasurementService {
     }
 
     @Override
-    public MeasurementDTO add(MeasureSaveDTO measureDTO) {
-        DeviceEntity device = deviceRepository.findByDeviceName(measureDTO.deviceName())
-                .orElseThrow();
+    public MeasurementBatchDTO add(MeasurementSaveDTO measurementDTO) {
+        DeviceEntity device = fetchDeviceByDeviceName(measurementDTO.deviceName());
 
-        MeasurementEntity measurement = measurementMapper.save(measureDTO, device);
-        measurement.setTimeStamp(LocalDateTime.now());
-        MeasurementEntity saved = measurementRepository.save(measurement);
+        MeasurementBatchEntity measurementBatch = new MeasurementBatchEntity();
+        measurementBatch.setDevice(device);
+        measurementBatch.setTimeStamp(now());
+
+        List<MeasurementEntity> measurements = measurementDTO.measurements().stream()
+                .map(measurementMapper::toEntity)
+                .toList();
+
+        measurementBatch.setMeasurements(measurements);
+
+        MeasurementBatchEntity saved = measurementRepository.save(measurementBatch);
         return measurementMapper.toDTO(saved);
     }
 
     @Override
-    public List<MeasurementDTO> findByQuery(MeasurementQuery query) {
+    public List<MeasurementBatchDTO> findByQuery(MeasurementQuery query) {
 
         DeviceEntity deviceEntity = fetchDeviceByDeviceName(query.deviceName());
 
@@ -69,7 +77,7 @@ public class MeasurementServiceImpl implements MeasurementService {
                 .orElseThrow();
     }
 
-    private List<MeasurementDTO> streamToDTO(List<MeasurementEntity> measurements) {
+    private List<MeasurementBatchDTO> streamToDTO(List<MeasurementBatchEntity> measurements) {
         return measurements.stream().map(measurementMapper::toDTO).toList();
     }
 }

@@ -1,9 +1,8 @@
 package cz.ferdo.iot_server.measurement.entity;
 
-import cz.ferdo.iot_server.devices.entity.DeviceEntity;
+import cz.ferdo.iot_server.measurement.enums.MeasurementType;
 import jakarta.persistence.*;
 
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "measurement")
@@ -14,16 +13,20 @@ public class MeasurementEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "device_id", nullable = false)
-    private DeviceEntity device;
+    @JoinColumn(name = "batch_id", nullable = false)
+    private MeasurementBatchEntity batch;
 
     @Column(nullable = false)
-    private double value;
+    private String sensorName;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private MeasurementType measurementType;
 
     @Column(nullable = false)
-    private LocalDateTime timeStamp;
+    private double sensorValue;
 
-    // === Getter / Setter ===
+    /* === Getter Setter === */
 
     public Long getId() {
         return id;
@@ -33,27 +36,35 @@ public class MeasurementEntity {
         this.id = id;
     }
 
-    public DeviceEntity getDevice() {
-        return device;
+    public MeasurementBatchEntity getBatch() {
+        return batch;
     }
 
-    public void setDevice(DeviceEntity device) {
-        this.device = device;
+    public void setBatch(MeasurementBatchEntity batch) {
+        this.batch = batch;
     }
 
-    public double getValue() {
-        return value;
+    public String getSensorName() {
+        return sensorName;
     }
 
-    public void setValue(double value) {
-        this.value = value;
+    public void setSensorName(String sensorName) {
+        this.sensorName = sensorName;
     }
 
-    public LocalDateTime getTimeStamp() {
-        return timeStamp;
+    public MeasurementType getMeasurementType() {
+        return measurementType;
     }
 
-    public void setTimeStamp(LocalDateTime timeStamp) {
-        this.timeStamp = timeStamp;
+    public void setMeasurementType(MeasurementType measurementType) {
+        this.measurementType = measurementType;
+    }
+
+    public double getSensorValue() {
+        return sensorValue;
+    }
+
+    public void setSensorValue(double sensorValue) {
+        this.sensorValue = sensorValue;
     }
 }

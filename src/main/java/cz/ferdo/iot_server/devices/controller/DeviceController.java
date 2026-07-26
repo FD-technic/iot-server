@@ -24,7 +24,7 @@ public class DeviceController {
     public HealthResponse health() {
         return new HealthResponse(
                 "UP",
-                "V0.0.1",
+                "V0.1.0",
                 Instant.now()
         );
     }

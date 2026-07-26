@@ -81,6 +81,7 @@ public class DeviceServiceImpl implements DeviceService {
     @Override
     public CommandResponse createResponse(DeviceMessageDTO message) {
         List<Command> commands = switch(message.deviceType()) {
+            case WEATHER -> processController(message.payload());
             case THERMOMETER -> processTemperature(message.payload());
             case IRRIGATION -> processIrrigation(message.payload());
             case CONTROLLER -> processController(message.payload());
@@ -90,6 +91,15 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     // === PRIVATE ===
+
+    private List<Command> processWeather(JsonNode jsonNode) {
+
+        //TemperaturePayload payload = objectMapper.treeToValue(jsonNode, TemperaturePayload.class);
+        led = !led;
+        List<Command> commands = new ArrayList<>();
+        commands.add(new BooleanCommand(CommandType.LED, "OldLed", led));
+        return commands;
+    }
 
     private List<Command> processTemperature(JsonNode jsonNode) {
 

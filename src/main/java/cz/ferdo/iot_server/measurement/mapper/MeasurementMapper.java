@@ -1,37 +1,62 @@
 package cz.ferdo.iot_server.measurement.mapper;
 
 import cz.ferdo.iot_server.devices.entity.DeviceEntity;
-import cz.ferdo.iot_server.measurement.dto.MeasureSaveDTO;
-import cz.ferdo.iot_server.measurement.dto.MeasurementDTO;
+import cz.ferdo.iot_server.measurement.dto.MeasurementValueDTO;
+import cz.ferdo.iot_server.measurement.dto.MeasurementBatchDTO;
+import cz.ferdo.iot_server.measurement.entity.MeasurementBatchEntity;
 import cz.ferdo.iot_server.measurement.entity.MeasurementEntity;
 import org.springframework.stereotype.Component;
 
 @Component
 public class MeasurementMapper {
-    public MeasurementDTO toDTO(MeasurementEntity entity) {
-        return new MeasurementDTO(
+    public MeasurementBatchDTO toDTO(MeasurementBatchEntity entity) {
+        return new MeasurementBatchDTO(
                 entity.getId(),
-                entity.getDevice().getId(),
-                entity.getValue(),
+                entity.getDevice().getDeviceName(),
+                entity.getMeasurements().stream().map(this::toDTO).toList(),
                 entity.getTimeStamp()
         );
     }
 
-    public MeasurementEntity toEntity(MeasurementDTO dto, DeviceEntity deviceEntity) {
-        MeasurementEntity measurementEntity = new MeasurementEntity();
-        measurementEntity.setId(dto.id());
-        measurementEntity.setDevice(deviceEntity);
-        measurementEntity.setValue(dto.value());
-        measurementEntity.setTimeStamp(dto.timeStamp());
+    public MeasurementBatchEntity toEntity(MeasurementBatchDTO dto, DeviceEntity deviceEntity) {
+        MeasurementBatchEntity measurementBatchEntity = new MeasurementBatchEntity();
+        measurementBatchEntity.setId(dto.id());
+        measurementBatchEntity.setDevice(deviceEntity);
+        measurementBatchEntity.setMeasurements(
+                dto.measurements()
+                        .stream()
+                        .map(this::toEntity)
+                        .toList());
+        measurementBatchEntity.setTimeStamp(dto.timeStamp());
 
-        return measurementEntity;
+        return measurementBatchEntity;
     }
 
-    public MeasurementEntity save(MeasureSaveDTO dto, DeviceEntity deviceEntity) {
-        MeasurementEntity measurementEntity = new MeasurementEntity();
-        measurementEntity.setDevice(deviceEntity);
-        measurementEntity.setValue(dto.value());
+    public MeasurementBatchEntity save(MeasurementBatchDTO dto, DeviceEntity deviceEntity) {
+        MeasurementBatchEntity measurementBatchEntity = new MeasurementBatchEntity();
+        measurementBatchEntity.setDevice(deviceEntity);
+        measurementBatchEntity.setMeasurements(
+                dto.measurements()
+                        .stream()
+                        .map(this::toEntity).toList());
 
-        return measurementEntity;
+        return measurementBatchEntity;
+    }
+
+    public MeasurementEntity toEntity(MeasurementValueDTO valueDTO) {
+        MeasurementEntity entity = new MeasurementEntity();
+        entity.setSensorName(valueDTO.sensorName());
+        entity.setMeasurementType(valueDTO.type());
+        entity.setSensorValue(valueDTO.value());
+
+        return entity;
+    }
+
+    public MeasurementValueDTO toDTO(MeasurementEntity measurementEntity) {
+        return new MeasurementValueDTO(
+                measurementEntity.getSensorName(),
+                measurementEntity.getMeasurementType(),
+                measurementEntity.getSensorValue()
+        );
     }
 }
