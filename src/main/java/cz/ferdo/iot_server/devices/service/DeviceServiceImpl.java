@@ -1,5 +1,7 @@
 package cz.ferdo.iot_server.devices.service;
 
+import cz.ferdo.iot_server.advice.DeviceAlreadyExistsException;
+import cz.ferdo.iot_server.advice.DeviceNotFoundException;
 import cz.ferdo.iot_server.commands.command.BooleanCommand;
 import cz.ferdo.iot_server.commands.command.Command;
 import cz.ferdo.iot_server.commands.command.DoubleCommand;
@@ -36,10 +38,16 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public DeviceDTO add(DeviceDTO deviceDTO) {
-        DeviceEntity entity = deviceMapper.toEntity(deviceDTO);
-        DeviceEntity saved = deviceRepository.save(entity);
 
-        return deviceMapper.toDTO(saved);
+            if (deviceRepository.existsByDeviceName(deviceDTO.getName())) {
+                throw new DeviceAlreadyExistsException(deviceDTO.getName());
+            }
+
+            DeviceEntity deviceEntity = deviceMapper.toEntity(deviceDTO);
+
+            DeviceEntity saved = deviceRepository.save(deviceEntity);
+
+            return deviceMapper.toDTO(saved);
     }
 
     @Override
@@ -63,9 +71,9 @@ public class DeviceServiceImpl implements DeviceService {
 
 
     @Override
-    public DeviceDTO findById(Long deviceId) {
-        DeviceEntity entity = deviceRepository.findById(deviceId)
-                .orElseThrow();
+    public DeviceDTO findByName(String deviceName) {
+        DeviceEntity entity = deviceRepository.findByDeviceName(deviceName)
+                .orElseThrow(() -> new DeviceNotFoundException(deviceName));
 
         return deviceMapper.toDTO(entity);
     }
@@ -75,6 +83,7 @@ public class DeviceServiceImpl implements DeviceService {
         List<Command> commands = switch(message.deviceType()) {
             case THERMOMETER -> processTemperature(message.payload());
             case IRRIGATION -> processIrrigation(message.payload());
+            case CONTROLLER -> processController(message.payload());
         };
 
         return new CommandResponse(commands);
@@ -92,6 +101,16 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     private List<Command> processIrrigation(JsonNode jsonNode) {
+
+        IrrigationPayload payload = objectMapper.treeToValue(jsonNode, IrrigationPayload.class);
+        led = !led;
+        List<Command> commands = new ArrayList<>();
+        commands.add(new BooleanCommand(CommandType.LED, "NewLed", led));
+        commands.add(new DoubleCommand(CommandType.TEMP, "MeinTemp", payload.mainTemperature()));
+        return commands;
+    }
+
+    private List<Command> processController(JsonNode jsonNode) {
 
         IrrigationPayload payload = objectMapper.treeToValue(jsonNode, IrrigationPayload.class);
         led = !led;

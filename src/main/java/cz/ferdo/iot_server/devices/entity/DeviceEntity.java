@@ -15,7 +15,7 @@ public class DeviceEntity {
     @Column(nullable = false)
     private DeviceType deviceType;
 
-    @Column(nullable = false)
+    @Column(unique = true, nullable = false)
     private String deviceName;
 
     private String description;

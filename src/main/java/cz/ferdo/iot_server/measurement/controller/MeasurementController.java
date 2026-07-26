@@ -2,13 +2,14 @@ package cz.ferdo.iot_server.measurement.controller;
 
 import cz.ferdo.iot_server.measurement.dto.MeasureSaveDTO;
 import cz.ferdo.iot_server.measurement.dto.MeasurementDTO;
+import cz.ferdo.iot_server.measurement.query.MeasurementQuery;
 import cz.ferdo.iot_server.measurement.service.MeasurementService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/measure")
+@RequestMapping("/api/measurements")
 public class MeasurementController {
 
     private final MeasurementService measurementService;
@@ -22,8 +23,8 @@ public class MeasurementController {
         return measurementService.add(measureSaveDTO);
     }
 
-    @GetMapping("/{deviceId}")
-    public List<MeasurementDTO> findByDeviceId(@PathVariable Long deviceId) {
-        return measurementService.findByDevice(deviceId);
+    @GetMapping()
+    public List<MeasurementDTO> findByQuery(@ModelAttribute MeasurementQuery query) {
+        return measurementService.findByQuery(query);
     }
 }

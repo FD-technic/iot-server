@@ -29,30 +29,27 @@ public class DeviceController {
         );
     }
 
-    @PostMapping("/device")
+    @PostMapping("/devices")
     public DeviceDTO createDevice(@RequestBody DeviceDTO deviceDTO) {
-        System.out.print("DEVICE: " );
-        System.out.println(deviceDTO.getFirmwareVersion());
-
         return deviceService.add(deviceDTO);
     }
 
-    @GetMapping("/device")
+    @GetMapping("/devices")
     public List<DeviceDTO> getAllDevices() {
         return deviceService.findAll();
     }
 
-    @GetMapping("/device/{id}")
-    public DeviceDTO getDevice(@PathVariable Long id) {
-        return deviceService.findById(id);
+    @GetMapping("/devices/{name}")
+    public DeviceDTO getDevice(@PathVariable String name) {
+        System.out.println("Controller: " + name);
+        return deviceService.findByName(name);
     }
 
-    @PostMapping("/device/command")
+    @PostMapping("/devices/command")
     public CommandResponse createResponse(@RequestBody DeviceMessageDTO message) {
 
         System.out.println(message);
 
         return deviceService.createResponse(message);
     }
-
 }

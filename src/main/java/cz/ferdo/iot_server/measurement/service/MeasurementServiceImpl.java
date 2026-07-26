@@ -5,12 +5,16 @@ import cz.ferdo.iot_server.devices.repository.DeviceRepository;
 import cz.ferdo.iot_server.measurement.dto.MeasureSaveDTO;
 import cz.ferdo.iot_server.measurement.dto.MeasurementDTO;
 import cz.ferdo.iot_server.measurement.entity.MeasurementEntity;
+import cz.ferdo.iot_server.measurement.enums.Period;
 import cz.ferdo.iot_server.measurement.mapper.MeasurementMapper;
+import cz.ferdo.iot_server.measurement.query.MeasurementQuery;
 import cz.ferdo.iot_server.measurement.repository.MeasurementRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
+import static java.time.LocalDateTime.now;
 
 @Service
 public class MeasurementServiceImpl implements MeasurementService {
@@ -37,16 +41,36 @@ public class MeasurementServiceImpl implements MeasurementService {
     }
 
     @Override
-    public List<MeasurementDTO> findByDevice(Long deviceId) {
-        List<MeasurementEntity> measurements = measurementRepository.findByDeviceId(deviceId);
-        return measurements.stream()
-                .map(measurementMapper::toDTO)
-                .toList();
+    public List<MeasurementDTO> findByQuery(MeasurementQuery query) {
+
+        DeviceEntity deviceEntity = fetchDeviceByDeviceName(query.deviceName());
+
+        if (query.period() == Period.ALL) {
+            return streamToDTO(measurementRepository.findByDevice(deviceEntity));
+        }
+
+        LocalDateTime dateFrom = switch(query.period()) {
+            case DAY -> now().minusDays(1);
+            case WEEK -> now().minusWeeks(1);
+            case MONTH -> now().minusMonths(1);
+            case QUARTER -> now().minusMonths(3);
+            case HALF -> now().minusMonths(6);
+            case YEAR -> now().minusYears(1);
+            case ALL -> throw new IllegalStateException("ALL should be handled before switch");
+        };
+
+        return streamToDTO(measurementRepository.findByDeviceAndTimeStampAfter(deviceEntity, dateFrom));
     }
-    //List<Measurement> findByQuery(MeasurementQuery query);
 
     // === Private ===
 
+    private DeviceEntity fetchDeviceByDeviceName(String deviceName) {
+        return deviceRepository.findByDeviceName(deviceName)
+                .orElseThrow();
+    }
 
+    private List<MeasurementDTO> streamToDTO(List<MeasurementEntity> measurements) {
+        return measurements.stream().map(measurementMapper::toDTO).toList();
+    }
 }
 
