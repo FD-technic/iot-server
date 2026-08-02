@@ -1,6 +1,6 @@
 package cz.ferdo.iot_server.devices.dto;
 
-import cz.ferdo.iot_server.enums.DeviceType;
+import cz.ferdo.iot_server.core.enums.DeviceType;
 
 public class DeviceDTO {
 

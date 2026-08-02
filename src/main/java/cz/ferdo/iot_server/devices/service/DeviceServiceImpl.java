@@ -12,7 +12,7 @@ import cz.ferdo.iot_server.devices.dto.DeviceMessageDTO;
 import cz.ferdo.iot_server.devices.entity.DeviceEntity;
 import cz.ferdo.iot_server.devices.mapper.DeviceMapper;
 import cz.ferdo.iot_server.devices.repository.DeviceRepository;
-import cz.ferdo.iot_server.enums.CommandType;
+import cz.ferdo.iot_server.core.enums.CommandType;
 import org.springframework.stereotype.Service;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;

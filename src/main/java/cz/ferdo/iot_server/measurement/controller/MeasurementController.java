@@ -19,7 +19,7 @@ public class MeasurementController {
     }
 
     @PostMapping
-    public MeasurementBatchDTO addMeasure(@RequestBody MeasurementSaveDTO measurementDTO) {
+    public MeasurementBatchDTO addMeasure(@RequestBody MeasurementBatchDTO measurementDTO) {
         return measurementService.add(measurementDTO);
     }
 

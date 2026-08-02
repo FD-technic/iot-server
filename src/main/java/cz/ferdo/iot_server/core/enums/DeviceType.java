@@ -1,4 +1,4 @@
-package cz.ferdo.iot_server.enums;
+package cz.ferdo.iot_server.core.enums;
 
 public enum DeviceType {
     WEATHER,

@@ -1,7 +1,7 @@
 package cz.ferdo.iot_server.devices.entity;
 
 
-import cz.ferdo.iot_server.enums.DeviceType;
+import cz.ferdo.iot_server.core.enums.DeviceType;
 import jakarta.persistence.*;
 
 @Entity

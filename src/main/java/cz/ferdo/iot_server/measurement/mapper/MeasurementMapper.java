@@ -1,11 +1,15 @@
 package cz.ferdo.iot_server.measurement.mapper;
 
+import cz.ferdo.iot_server.charts.dto.ChartPointDTO;
 import cz.ferdo.iot_server.devices.entity.DeviceEntity;
+import cz.ferdo.iot_server.measurement.dto.MeasurementDTO;
 import cz.ferdo.iot_server.measurement.dto.MeasurementValueDTO;
 import cz.ferdo.iot_server.measurement.dto.MeasurementBatchDTO;
 import cz.ferdo.iot_server.measurement.entity.MeasurementBatchEntity;
 import cz.ferdo.iot_server.measurement.entity.MeasurementEntity;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDateTime;
 
 @Component
 public class MeasurementMapper {
@@ -58,5 +62,12 @@ public class MeasurementMapper {
                 measurementEntity.getMeasurementType(),
                 measurementEntity.getSensorValue()
         );
+    }
+
+    public ChartPointDTO toChartPointDTO(MeasurementEntity measurementEntity, MeasurementBatchEntity measurementBatchEntity) {
+        LocalDateTime time = measurementBatchEntity.getTimeStamp();
+
+        double value = measurementEntity.getSensorValue();
+        return new ChartPointDTO(time, value);
     }
 }

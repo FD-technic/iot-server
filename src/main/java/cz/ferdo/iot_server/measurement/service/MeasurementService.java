@@ -10,7 +10,7 @@ import java.util.List;
 @Service
 public interface MeasurementService {
 
-    MeasurementBatchDTO add(MeasurementSaveDTO measurementDTO);
+    MeasurementBatchDTO add(MeasurementBatchDTO measurementDTO);
     List<MeasurementBatchDTO> findByQuery(MeasurementQuery query);
 }
 
