@@ -1,5 +1,7 @@
 package cz.ferdo.iot_server.charts.service;
 
+import cz.ferdo.iot_server.advice.DeviceNotFoundException;
+import cz.ferdo.iot_server.advice.SensorNotFoundException;
 import cz.ferdo.iot_server.charts.dto.ChartPointDTO;
 import cz.ferdo.iot_server.charts.dto.ChartSeriesDTO;
 import cz.ferdo.iot_server.charts.dto.SensorDTO;
@@ -70,7 +72,7 @@ public class ChartServiceImpl implements ChartService {
         for (SensorDTO sensor : query.sensors()) {
 
             DeviceEntity device = deviceRepository.findByDeviceName(sensor.deviceName())
-                    .orElseThrow();
+                    .orElseThrow(() -> new DeviceNotFoundException(sensor.deviceName()));
 
             List<MeasurementBatchEntity> batchList = measurementRepository.findByDeviceAndTimeStampAfter(device, dateFrom);
 
