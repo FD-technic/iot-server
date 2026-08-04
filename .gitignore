@@ -1,5 +1,7 @@
 HELP.md
 target/
+deploy.bat
+deploy.conf
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/

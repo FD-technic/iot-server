@@ -1,121 +1,127 @@
 # IoT Server
 
+IoT Server is a Spring Boot backend designed for communication with ESP32-based IoT devices over HTTP.
+
+It provides a lightweight and extensible platform for device management, telemetry collection and command execution. The project serves as a reusable foundation for home automation, environmental monitoring and future IoT applications.
+
 ---
 
-The goal of this project is to provide a lightweight, extensible backend for ESP32-based IoT devices communicating over HTTP. It serves as a reusable foundation for home automation, monitoring, and future IoT projects.
+## Quick Links
+
+📦 **IoT Server Repository**
+
+https://github.com/FD-technic/iot-server
+
+📦 **IoT Devices Repository**
+
+https://github.com/FD-technic/iot-devices
 
 ---
 
-Spring Boot backend for communication with IoT devices such as ESP32.
+# Deployment
 
-The project is designed as a universal communication server running on an Orange Pi. Devices periodically send their current state, and the server responds with commands to execute.
+The application is deployed as a **systemd** service on a Linux-based Orange Pi.
 
-## Features
+### Running Service
+
+![IoT Server Service](docs/pic/systemctl-status.png)
+
+---
+
+# REST API
+
+### Registered Devices
+
+The server provides a REST endpoint for device management.
+
+![Registered Devices](docs/pic/postman-devices.png)
+
+---
+
+### Historical Sensor Data
+
+Historical measurements can be queried through the REST API.
+
+![Historical Data](docs/pic/postman-charts.png)
+
+---
+
+# Hardware
+
+### Orange Pi Server
+
+![Orange Pi](docs/pic/orangepi.jpg)
+
+---
+
+### ESP32 Weather Station
+
+![ESP32 Weather Station](docs/pic/esp32-weather.jpg)
+
+---
+
+### ESP32 Temperature Sensor
+
+![ESP32 Temperature Sensor](docs/pic/esp32-temperature.jpg)
+
+---
+
+
+# Features
 
 - REST API for IoT devices
 - Generic device communication protocol
-- Extensible payload architecture
+- JSON-based communication
+- Stateless REST architecture
 - Command-based responses
 - Health endpoint
-- Ready for deployment on Linux (Orange Pi)
-- Designed for future integration with PostgreSQL and React dashboard
+- Linux deployment
+- Extensible payload architecture
+- Ready for PostgreSQL integration
+- Ready for React dashboard integration
 
 ---
 
-## Technology Stack
+# Tech Stack
 
 - Java 21
-- Spring Boot 4
+- Spring Boot
 - Maven
-- Jackson 3
+- Jackson
 - REST API
+- Docker
+- Linux
+- Git
+- GitHub
 
 ---
 
-## Project Structure
-
-```
-src
- ├── controller
- ├── service
- ├── dto
- ├── command
- ├── enums
- └── config
-```
-
----
-
-## Communication Flow
+# Architecture
 
 ```text
-ESP32
-   │
-   │ JSON
-   ▼
-Spring Boot
-   │
-Business Logic
-   │
-List<Command>
-   │
-   ▼
-ESP32 executes commands
+ESP32 Device
+      │
+ JSON over HTTP
+      ▼
+Spring Boot REST API
+      │
+ Business Logic
+      │
+ Command Processing
+      │
+ JSON Response
+      ▼
+ESP32 Device
 ```
 
 ---
 
-## Device Message Example
+# Getting Started
 
-```json
-{
-  "deviceId": "esp32-01",
-  "deviceType": "IRRIGATION",
-  "firmware": "v0.1",
-  "payload": {
-    "mainTemperature": 25.0,
-    "inputTemperature": 15.0,
-    "outputTemperature": 5.0
-  }
-}
-```
+## Requirements
 
----
-
-## Response Example
-
-```json
-{
-  "commands": [
-    {
-      "type": "LED",
-      "enabled": true
-    },
-    {
-      "type": "TEMP",
-      "value": 25.0
-    }
-  ]
-}
-```
-
----
-
-## Health Endpoint
-
-```
-GET /api/health
-```
-
-Example response:
-
-```json
-{
-  "status": "UP",
-  "version": "v0.0.1",
-  "timestamp": "2026-07-19T13:23:21Z"
-}
-```
+- Java 21+
+- Maven
 
 ---
 
@@ -125,58 +131,65 @@ Example response:
 mvn clean package
 ```
 
-Output:
-
-```
-target/iot-server-0.0.1-SNAPSHOT.jar
-```
-
 ---
 
-## Running
+## Run
 
 ```bash
-java -jar target/iot-server-0.0.1-SNAPSHOT.jar
+java -jar target/iot-server.jar
 ```
 
 ---
 
-## Deployment
+# API
 
-The application is intended to run as a `systemd` service on an Orange Pi.
+## Health Endpoint
 
-Typical deployment:
-
-```bash
-sudo systemctl stop iot-server
-scp target/iot-server-0.0.1-SNAPSHOT.jar root@orangepi:/opt/iot-server/
-sudo systemctl start iot-server
+```http
+GET /api/health
 ```
 
 ---
 
-## Roadmap
+## Communication Endpoint
 
-### Current
+```http
+POST /api/device
+```
+
+Devices send telemetry data and receive commands in the response.
+
+---
+
+# Project Status
+
+## Implemented
 
 - REST communication
 - Device protocol
 - Command architecture
 - Health endpoint
-- Orange Pi deployment
+- Linux deployment
 
-### Planned
+## Planned
 
-- PostgreSQL storage
 - Device registration
+- PostgreSQL persistence
 - Configuration management
 - React dashboard
 - Historical charts
 - OTA firmware updates
-- MQTT support (optional)
+- MQTT support
 
 ---
 
-## License
+# Documentation
+
+- architecture.md
+- roadmap.md
+
+---
+
+# License
 
 MIT
