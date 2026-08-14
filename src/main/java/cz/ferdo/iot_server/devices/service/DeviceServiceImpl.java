@@ -2,23 +2,29 @@ package cz.ferdo.iot_server.devices.service;
 
 import cz.ferdo.iot_server.advice.DeviceAlreadyExistsException;
 import cz.ferdo.iot_server.advice.DeviceNotFoundException;
+import cz.ferdo.iot_server.charts.dto.SensorDTO;
 import cz.ferdo.iot_server.commands.command.BooleanCommand;
 import cz.ferdo.iot_server.commands.command.Command;
 import cz.ferdo.iot_server.commands.command.DoubleCommand;
 import cz.ferdo.iot_server.commands.command.dto.CommandResponse;
 import cz.ferdo.iot_server.commands.command.dto.IrrigationPayload;
 import cz.ferdo.iot_server.devices.dto.DeviceDTO;
+import cz.ferdo.iot_server.devices.dto.DeviceDetailDTO;
 import cz.ferdo.iot_server.devices.dto.DeviceMessageDTO;
+import cz.ferdo.iot_server.devices.dto.SensorsOfDeviceDTO;
 import cz.ferdo.iot_server.devices.entity.DeviceEntity;
 import cz.ferdo.iot_server.devices.mapper.DeviceMapper;
 import cz.ferdo.iot_server.devices.repository.DeviceRepository;
 import cz.ferdo.iot_server.core.enums.CommandType;
+import cz.ferdo.iot_server.devices.repository.DeviceRepositoryCustom;
 import org.springframework.stereotype.Service;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class DeviceServiceImpl implements DeviceService {
@@ -29,8 +35,7 @@ public class DeviceServiceImpl implements DeviceService {
     private final DeviceMapper deviceMapper;
     private final DeviceRepository deviceRepository;
 
-    public DeviceServiceImpl(ObjectMapper objectMapper, DeviceMapper deviceMapper, DeviceRepository deviceRepository)
-    {
+    public DeviceServiceImpl(ObjectMapper objectMapper, DeviceMapper deviceMapper, DeviceRepository deviceRepository) {
         this.objectMapper = objectMapper;
         this.deviceMapper = deviceMapper;
         this.deviceRepository = deviceRepository;
@@ -88,6 +93,27 @@ public class DeviceServiceImpl implements DeviceService {
         };
 
         return new CommandResponse(commands);
+    }
+
+    @Override
+    public List<SensorsOfDeviceDTO> returnSensors() {
+        List<SensorsOfDeviceDTO> sensorsOfDevice = new ArrayList<>();
+        List<SensorDTO> sensors = deviceRepository.findAllSensors();
+
+        Map<String, List<String>> sensorsByDevice = new HashMap<>();
+
+        for (SensorDTO sensorDTO : sensors) {
+            sensorsByDevice
+                    .computeIfAbsent(sensorDTO.deviceName(), d -> new ArrayList<>())
+                    .add(sensorDTO.sensorName());
+        }
+        for (Map.Entry<String, List<String>> entry : sensorsByDevice.entrySet()) {
+            String deviceName = entry.getKey();
+            List<String> sensorNames = entry.getValue();
+
+            sensorsOfDevice.add(new SensorsOfDeviceDTO(deviceName, sensorNames));
+        }
+        return sensorsOfDevice;
     }
 
     // === PRIVATE ===

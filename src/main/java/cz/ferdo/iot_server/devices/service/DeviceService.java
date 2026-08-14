@@ -1,8 +1,11 @@
 package cz.ferdo.iot_server.devices.service;
 
+import cz.ferdo.iot_server.charts.dto.SensorDTO;
 import cz.ferdo.iot_server.commands.command.dto.CommandResponse;
 import cz.ferdo.iot_server.devices.dto.DeviceDTO;
+import cz.ferdo.iot_server.devices.dto.DeviceDetailDTO;
 import cz.ferdo.iot_server.devices.dto.DeviceMessageDTO;
+import cz.ferdo.iot_server.devices.dto.SensorsOfDeviceDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,4 +19,5 @@ public interface DeviceService {
     DeviceDTO update(Long deviceId, DeviceDTO deviceDTO);
     DeviceDTO delete(Long deviceId);
     CommandResponse createResponse(DeviceMessageDTO message);
+    List<SensorsOfDeviceDTO> returnSensors();
 }

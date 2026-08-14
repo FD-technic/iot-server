@@ -15,7 +15,7 @@ public class CoreController {
     public HealthResponse health() {
         return new HealthResponse(
                 "UP",
-                "V0.1.1",
+                "V0.1.2",
                 Instant.now()
         );
     }

@@ -24,7 +24,7 @@ public class MeasurementBatchEntity {
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    private List<MeasurementEntity> measurements = new ArrayList<>();
+    private final List<MeasurementEntity> measurements = new ArrayList<>();
 
     @Column(nullable = false)
     private LocalDateTime timeStamp;
