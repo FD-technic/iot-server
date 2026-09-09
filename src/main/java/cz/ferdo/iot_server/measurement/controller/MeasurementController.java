@@ -23,8 +23,9 @@ public class MeasurementController {
         return measurementService.add(measurementDTO);
     }
 
-    @GetMapping()
+    @GetMapping
     public List<MeasurementBatchDTO> findByQuery(@ModelAttribute MeasurementQuery query) {
         return measurementService.findByQuery(query);
     }
+
 }

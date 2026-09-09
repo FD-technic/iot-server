@@ -6,5 +6,5 @@ import cz.ferdo.iot_server.charts.query.ChartQuery;
 import java.util.List;
 
 public interface ChartService {
-    List<ChartSeriesDTO> getChartSeries(ChartQuery query);
+    List<ChartSeriesDTO> getChartSeriesByQuery(ChartQuery query);
 }

@@ -1,5 +1,7 @@
 package cz.ferdo.iot_server.measurement.service;
 
+import cz.ferdo.iot_server.charts.dto.ChartMeasurementProjection;
+import cz.ferdo.iot_server.charts.query.ChartQuery;
 import cz.ferdo.iot_server.core.PeriodService;
 import cz.ferdo.iot_server.devices.entity.DeviceEntity;
 import cz.ferdo.iot_server.devices.repository.DeviceRepository;
@@ -61,7 +63,15 @@ public class MeasurementServiceImpl implements MeasurementService {
 
         LocalDateTime dateFrom = periodService.findDateFrom(query.period());
 
-        return streamToDTO(measurementRepository.findByDeviceAndTimeStampAfter(deviceEntity, dateFrom));
+        return streamToDTO(measurementRepository.findByDeviceAndTimeStampAfterOrderByTimeStamp(deviceEntity, dateFrom));
+    }
+
+    @Override
+    public List<ChartMeasurementProjection> findChartPointsByQuery(ChartQuery query) {
+
+        LocalDateTime dateFrom = periodService.findDateFrom(query.period());
+
+        return measurementRepository.findChartMeasurements(query.sensors(), dateFrom);
     }
 
     // === Private ===

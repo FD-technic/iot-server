@@ -1,8 +1,7 @@
 package cz.ferdo.iot_server.measurement.mapper;
 
-import cz.ferdo.iot_server.charts.dto.ChartPointDTO;
-import cz.ferdo.iot_server.devices.entity.DeviceEntity;
 import cz.ferdo.iot_server.measurement.dto.MeasurementDTO;
+import cz.ferdo.iot_server.devices.entity.DeviceEntity;
 import cz.ferdo.iot_server.measurement.dto.MeasurementValueDTO;
 import cz.ferdo.iot_server.measurement.dto.MeasurementBatchDTO;
 import cz.ferdo.iot_server.measurement.entity.MeasurementBatchEntity;
@@ -13,6 +12,8 @@ import java.time.LocalDateTime;
 
 @Component
 public class MeasurementMapper {
+
+    //
     public MeasurementBatchDTO toDTO(MeasurementBatchEntity entity) {
         return new MeasurementBatchDTO(
                 entity.getId(),
@@ -21,6 +22,15 @@ public class MeasurementMapper {
                 entity.getTimeStamp()
         );
     }
+
+    public MeasurementValueDTO toDTO(MeasurementEntity measurementEntity) {
+        return new MeasurementValueDTO(
+                measurementEntity.getSensorName(),
+                measurementEntity.getMeasurementType(),
+                measurementEntity.getSensorValue()
+        );
+    }
+
 
     public MeasurementBatchEntity toEntity(MeasurementBatchDTO dto, DeviceEntity deviceEntity) {
         MeasurementBatchEntity measurementBatchEntity = new MeasurementBatchEntity();
@@ -56,18 +66,10 @@ public class MeasurementMapper {
         return entity;
     }
 
-    public MeasurementValueDTO toDTO(MeasurementEntity measurementEntity) {
-        return new MeasurementValueDTO(
-                measurementEntity.getSensorName(),
-                measurementEntity.getMeasurementType(),
-                measurementEntity.getSensorValue()
-        );
-    }
-
-    public ChartPointDTO toChartPointDTO(MeasurementEntity measurementEntity, MeasurementBatchEntity measurementBatchEntity) {
+    public MeasurementDTO toMeasurementPointDTO(MeasurementEntity measurementEntity, MeasurementBatchEntity measurementBatchEntity) {
         LocalDateTime time = measurementBatchEntity.getTimeStamp();
 
         double value = measurementEntity.getSensorValue();
-        return new ChartPointDTO(time, value);
+        return new MeasurementDTO(value, time);
     }
 }

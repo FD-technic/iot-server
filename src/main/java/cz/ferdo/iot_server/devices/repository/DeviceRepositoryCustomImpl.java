@@ -1,7 +1,6 @@
 package cz.ferdo.iot_server.devices.repository;
 
 import cz.ferdo.iot_server.charts.dto.SensorDTO;
-import cz.ferdo.iot_server.charts.dto.SensorMapDTO;
 import cz.ferdo.iot_server.devices.entity.DeviceEntity;
 import cz.ferdo.iot_server.measurement.entity.MeasurementBatchEntity;
 import cz.ferdo.iot_server.measurement.entity.MeasurementEntity;
@@ -14,7 +13,6 @@ import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Root;
 import jakarta.persistence.criteria.Path;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class DeviceRepositoryCustomImpl implements DeviceRepositoryCustom {

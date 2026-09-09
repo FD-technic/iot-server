@@ -19,6 +19,6 @@ public class ChartController {
 
     @PostMapping
     public List<ChartSeriesDTO> getChartPoints(@RequestBody ChartQuery query) {
-        return chartService.getChartSeries(query);
+        return chartService.getChartSeriesByQuery(query);
     }
 }

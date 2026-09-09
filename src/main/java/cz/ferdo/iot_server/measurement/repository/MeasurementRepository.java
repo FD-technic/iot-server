@@ -7,11 +7,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public interface MeasurementRepository extends JpaRepository<MeasurementBatchEntity, Long> {
+public interface MeasurementRepository extends JpaRepository<MeasurementBatchEntity, Long>, MeasurementRepositoryCustom {
 
     List<MeasurementBatchEntity> findByDevice(DeviceEntity device);
 
 
-    List<MeasurementBatchEntity> findByDeviceAndTimeStampAfter(DeviceEntity device, LocalDateTime dateFrom);
+    List<MeasurementBatchEntity> findByDeviceAndTimeStampAfterOrderByTimeStamp(DeviceEntity device, LocalDateTime dateFrom);
 
 }
