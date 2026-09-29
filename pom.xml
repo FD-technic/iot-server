@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>cz.ferdo</groupId>
 	<artifactId>iot-server</artifactId>
-	<version>0.1.0-SNAPSHOT</version>
+	<version>1.0.0-SNAPSHOT</version>
 	<name/>
 	<description/>
 	<url/>

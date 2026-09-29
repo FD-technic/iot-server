@@ -8,10 +8,7 @@ import cz.ferdo.iot_server.commands.command.Command;
 import cz.ferdo.iot_server.commands.command.DoubleCommand;
 import cz.ferdo.iot_server.commands.command.dto.CommandResponse;
 import cz.ferdo.iot_server.commands.command.dto.IrrigationPayload;
-import cz.ferdo.iot_server.devices.dto.DeviceDTO;
-import cz.ferdo.iot_server.devices.dto.DeviceDetailDTO;
-import cz.ferdo.iot_server.devices.dto.DeviceMessageDTO;
-import cz.ferdo.iot_server.devices.dto.SensorsOfDeviceDTO;
+import cz.ferdo.iot_server.devices.dto.*;
 import cz.ferdo.iot_server.devices.entity.DeviceEntity;
 import cz.ferdo.iot_server.devices.mapper.DeviceMapper;
 import cz.ferdo.iot_server.devices.repository.DeviceRepository;
@@ -114,6 +111,11 @@ public class DeviceServiceImpl implements DeviceService {
             sensorsOfDevice.add(new SensorsOfDeviceDTO(deviceName, sensorNames));
         }
         return sensorsOfDevice;
+    }
+
+    @Override
+    public void setStatus(DeviceStatusDTO deviceStatusDTO) {
+
     }
 
     // === PRIVATE ===

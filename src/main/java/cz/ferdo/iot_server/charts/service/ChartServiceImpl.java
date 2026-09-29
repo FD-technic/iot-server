@@ -101,12 +101,12 @@ public class ChartServiceImpl implements ChartService {
             blockMeasurementList.add(measurement);
             count++;
             if (count > 0 && count % step == 0) {
-                measurementList.add(nextPoint(blockMeasurementList, measurementList));
+                measurementList.add(nextPoint(measurementList, blockMeasurementList));
                 blockMeasurementList = new ArrayList<>();
             }
         }
         if ( !blockMeasurementList.isEmpty() ) {
-            measurementList.add(nextPoint(blockMeasurementList, measurementList));
+            measurementList.add(nextPoint(measurementList, blockMeasurementList));
         }
 
         return measurementList;
